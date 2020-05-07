@@ -22,6 +22,8 @@ pipeline {
         stage('Instalacion Cassandra') {
             steps {
                 script {
+                def intValue = ${params.Nodos}.toInteger()
+                sh "echo ${intValue}"
                 for (loopIndex=0; loopIndex < 3;loopIndex++){
                 sh "gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a"
                 sh "sudo apt-get install -y apt-transport-https"
