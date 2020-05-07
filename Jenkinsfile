@@ -26,7 +26,7 @@ pipeline {
             steps {
                 script {
                 for (loopIndex=0; loopIndex < 3;loopIndex++){
-                sh ''' gcloud compute ssh cassandra-dev-\"${loopIndex}\" --zone=us-central1-a
+                sh """ gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a
                 sudo apt-get install -y apt-transport-https
                 sudo apt-get update
                 echo 'deb https://downloads.apache.org/cassandra/debian 311x main' | sudo tee -a /etc/apt/sources.liscassandra.sources.list
@@ -34,7 +34,7 @@ pipeline {
                 sudo apt-get update
                 sudo apt-get -y install cassandra
                 exit
-                '''
+                """
                 }
                        }
             }  
