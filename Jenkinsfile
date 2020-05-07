@@ -27,6 +27,7 @@ pipeline {
                 script {
                 for (loopIndex=0; loopIndex < 3;loopIndex++){
                 sh """ gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a
+                echo 'Prueba Funcionamiento'
                 sudo apt-get install -y apt-transport-https
                 sudo apt-get update
                 echo 'deb https://downloads.apache.org/cassandra/debian 311x main' | sudo tee -a /etc/apt/sources.liscassandra.sources.list
