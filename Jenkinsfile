@@ -26,6 +26,8 @@ pipeline {
                 sh "gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a"
                 sh "echo 'deb https://downloads.apache.org/cassandra/debian 311x main' | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list"
                 sh "curl https://downloads.apache.org/cassandra/KEYS | sudo apt-key add -"
+                sh "sudo apt-get install -y apt-transport-https"
+                sh "sudo apt-get update"
                 sh "sudo apt-get -y install cassandra"
                 sh "exit"
                 }
