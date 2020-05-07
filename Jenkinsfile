@@ -2,7 +2,7 @@ pipeline {
     agent any 
     parameters {
         string(name: 'CLUSTER_NAME', defaultValue: 'Test Cluster', description: 'Nombre del Cluster Cassandra')
-        integer(name: 'NODOS', defaultValue: '1', description: 'Cantidad de Nodos Cluster')
+        string(name: 'NODOS', defaultValue: '1', description: 'Cantidad de Nodos Cluster')
         string(name: 'SNITCH', defaultValue: 'SimpleSnitch', description: 'Tipo de Snitch Cluster')
     }
     stages {
