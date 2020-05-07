@@ -22,7 +22,6 @@ pipeline {
         stage('Instalacion Cassandra') {
             steps {
                 script {
-                sh "su - ignacio"
                 for (loopIndex=0; loopIndex < 3;loopIndex++){
                 sh "gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a"
                 sh "echo 'deb https://downloads.apache.org/cassandra/debian 311x main' | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list"
