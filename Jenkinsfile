@@ -46,7 +46,8 @@ pipeline {
                 gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a --command 'sudo sed -i 's/Test Cluster/${params.CLUSTER_NAME}/gI' /etc/cassandra/cassandra.yaml'
                 """
                 }
-            }   
+            }
+            }
         }  
         stage('Inicio de Servicio & Validación') {
             steps {
