@@ -40,7 +40,12 @@ pipeline {
         }
         stage('Modificaciones Nodo') {
             steps {
-                sh "sudo sed -i 's/Test Cluster/${params.CLUSTER_NAME}/gI' /etc/cassandra/cassandra.yaml"
+                script {
+                for (loopIndex=0; loopIndex < 3;loopIndex++){
+                sh """ 
+                gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a --command 'sudo sed -i 's/Test Cluster/${params.CLUSTER_NAME}/gI' /etc/cassandra/cassandra.yaml'
+                """
+                }
             }   
         }  
         stage('Inicio de Servicio & Validación') {
