@@ -42,7 +42,7 @@ pipeline {
             steps {
                 script {
                 for (loopIndex=0; loopIndex < Integer.parseInt("${params.NODOS}");loopIndex++){
-                sh 'CASSANDRA_NETWORK=\$(gcloud compute instances describe cassandra-dev-${loopIndex} --zone=us-central1-a --format='value(networkInterfaces.networkIP)')')
+                sh 'CASSANDRA_NETWORK=\$(gcloud compute instances describe cassandra-dev-${loopIndex} --zone=us-central1-a --format='value(networkInterfaces.networkIP)')'
                 sh """
                 echo '$CASSANDRA_NETWORK'
                 gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a --command "sudo sed -i 's/localhost/cassandra/gI' /etc/cassandra/cassandra.yaml"
