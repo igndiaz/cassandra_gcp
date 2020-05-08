@@ -1,4 +1,4 @@
-def CASSANDRA_IP="foo"
+def CASSANDRA_IP=[]
 pipeline {
     agent any 
     parameters {
