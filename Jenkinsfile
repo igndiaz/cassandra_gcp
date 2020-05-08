@@ -1,5 +1,6 @@
 def CASSANDRA_IP=[]
 def CASSANDRA_NETWORK
+def CASSANDRA_CLUSTER
 pipeline {
     agent any 
     parameters {
@@ -15,6 +16,12 @@ pipeline {
                 script {
                     for (loopIndex=0; loopIndex < Integer.parseInt("${params.NODOS}");loopIndex++) {
                sh "gcloud beta compute --project=my-own-project-252421 instances create cassandra-dev-${loopIndex} --zone=us-central1-a --machine-type=n1-standard-8 --subnet=default --network-tier=PREMIUM --maintenance-policy=MIGRATE --service-account=812385867631-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --tags=http-server,https-server --image=debian-9-stretch-v20200420 --image-project=debian-cloud --boot-disk-size=10GB --boot-disk-type=pd-standard --boot-disk-device-name=cassandra-dev-${loopIndex} --create-disk=mode=rw,size=100,type=projects/my-own-project-252421/zones/us-central1-a/diskTypes/pd-ssd,name=cassandra-dev-disk-${loopIndex},device-name=cassandra-dev-disk-${loopIndex} --reservation-affinity=any" 
+                }
+                for (loopIndex=0; loopIndex < Integer.parseInt("${params.NODOS}");loopIndex++) {
+                CASSANDRA_NETWORK= sh(script: "gcloud compute instances describe cassandra-dev-${loopIndex} --zone=us-central1-a --format='value(networkInterfaces.networkIP)'", returnStdout: true)
+                echo CASSANDRA_NETWORK
+                CASSANDRA_IP.add(CASSANDRA_NETWORK)
+                println CASSANDRA_IP                   
                 }
                        }   
             } 
@@ -38,23 +45,26 @@ pipeline {
         stage('Modificaciones Nodo') {
             steps {
                 script {
+                CASSANDRA_CLUSTER=CASSANDRA_IP.join(",")
+
                 for (loopIndex=0; loopIndex < Integer.parseInt("${params.NODOS}");loopIndex++){
+                if ("${params.SNITCH}" == 'GossipingPropertyFileSnitch'){
+                sh "gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a --command 'sudo rm /etc/cassandra/cassandra-rackdc.properties'"  
+                }
                 sh """
                 CASSANDRA_NETWORK=\$(gcloud compute instances describe cassandra-dev-${loopIndex} --zone=us-central1-a --format='value(networkInterfaces.networkIP)')
                 gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a --command "sudo sed -i 's/localhost/\$CASSANDRA_NETWORK/gI' /etc/cassandra/cassandra.yaml"
-                gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a --command "sudo sed -i 's/127.0.0.1/\$CASSANDRA_NETWORK/gI' /etc/cassandra/cassandra.yaml"
+                gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a --command "sudo sed -i 's/127.0.0.1/${CASSANDRA_CLUSTER}/gI' /etc/cassandra/cassandra.yaml"
                 gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a --command "sudo sed -i 's/Test Cluster/${params.CLUSTER_NAME}/gI' /etc/cassandra/cassandra.yaml"
                 gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a --command "sudo sed -i 's/SimpleSnitch/${params.SNITCH}/gI' /etc/cassandra/cassandra.yaml"
                 """
                 }
-                echo CASSANDRA_NETWORK
             }
             }
         }  
         stage('Inicio de Servicio & Validación') {
             steps {
                  script {
-                echo CASSANDRA_NETWORK
                 for (loopIndex=0; loopIndex < Integer.parseInt("${params.NODOS}");loopIndex++){
                 sh """ 
                 gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a --command "sudo service cassandra start"
