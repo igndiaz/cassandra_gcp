@@ -44,7 +44,7 @@ pipeline {
                 for (loopIndex=0; loopIndex < Integer.parseInt("${params.NODOS}");loopIndex++){
                 sh """
                 CASSANDRA_NETWORK=\$(gcloud compute instances describe cassandra-dev-${loopIndex} --zone=us-central1-a --format='value(networkInterfaces.networkIP)')
-                gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a --command "sudo sed -i 's/localhost/$CASSANDRA_NETWORK/gI' /etc/cassandra/cassandra.yaml"
+                gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a --command "sudo sed -i 's/localhost/${CASSANDRA_NETWORK}/gI' /etc/cassandra/cassandra.yaml"
                 gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a --command "sudo sed -i 's/Test Cluster/${params.CLUSTER_NAME}/gI' /etc/cassandra/cassandra.yaml"
                 gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a --command "sudo sed -i 's/SimpleSnitch/${params.SNITCH}/gI' /etc/cassandra/cassandra.yaml"
                 """
