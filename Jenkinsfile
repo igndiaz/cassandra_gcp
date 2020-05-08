@@ -3,7 +3,7 @@ pipeline {
     parameters {
         string(name: 'CLUSTER_NAME', defaultValue: 'Test Cluster', description: 'Nombre del Cluster Cassandra')
         string(name: 'NODOS', defaultValue: '1', description: 'Cantidad de Nodos Cluster')
-        choices(name: 'SNITCH', choices: ['SimpleSnitch', 'GossipingPropertyFileSnitch', 'GoogleCloudSnitch'], description: 'Tipo de Snitch Cluster')
+        choice(name: 'SNITCH', choices: ['SimpleSnitch', 'GossipingPropertyFileSnitch', 'GoogleCloudSnitch'], description: 'Tipo de Snitch Cluster')
     }
     environment {
         cantidad= "${params.NODOS.toInteger()}"
