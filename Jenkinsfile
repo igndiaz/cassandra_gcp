@@ -17,7 +17,7 @@ pipeline {
                 }
           for (loopIndex=0; loopIndex < Integer.parseInt("${params.NODOS}");loopIndex++) {
                 sh "CASSANDRA_IP=\$(gcloud compute instances describe cassandra-dev-${loopIndex} --zone=us-central1-a --format='value(networkInterfaces.networkIP)')"
-                sh "echo "\$CASSANDRA_IP""
+             echo CASSANDRA_IP
 
           }
                        }   
