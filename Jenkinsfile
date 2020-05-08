@@ -26,15 +26,13 @@ pipeline {
             steps {
                 script {
                 for (loopIndex=0; loopIndex < 3;loopIndex++){
-                sh """ gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a
-                echo 'Prueba Funcionamiento'
-                sudo apt-get install -y apt-transport-https
-                sudo apt-get update
-                echo 'deb https://downloads.apache.org/cassandra/debian 311x main' | sudo tee -a /etc/apt/sources.liscassandra.sources.list
-                curl https://downloads.apache.org/cassandra/KEYS | sudo apt-key add -
-                sudo apt-get update
-                sudo apt-get -y install cassandra
-                exit
+                sh """ 
+                gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a --command 'sudo apt-get install -y apt-transport-https'
+                gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a --command 'sudo apt-get update'
+                gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a --command 'echo 'deb https://downloads.apache.org/cassandra/debian 311x main' | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list'
+                gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a --command 'curl https://downloads.apache.org/cassandra/KEYS | sudo apt-key add -'
+                gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a --command 'sudo apt-get update'
+                gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a --command 'sudo apt-get -y install cassandra'
                 """
                 }
                        }
