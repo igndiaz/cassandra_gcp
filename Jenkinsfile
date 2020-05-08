@@ -1,4 +1,4 @@
-def CASSANDRA_IP="foo"
+def CASSANDRA_IP
 pipeline {
     agent any 
     parameters {
@@ -17,9 +17,9 @@ pipeline {
                 }
           for (loopIndex=0; loopIndex < Integer.parseInt("${params.NODOS}");loopIndex++) {
               sh """
-              CASSANDRA_VAR=\$(gcloud compute instances describe cassandra-dev-${loopIndex} --zone=us-central1-a --format='value(networkInterfaces.networkIP)')
-              export CASSANDRA_VAR
-              echo "${CASSANDRA_VAR}"
+              CASSANDRA_IP=\$(gcloud compute instances describe cassandra-dev-${loopIndex} --zone=us-central1-a --format='value(networkInterfaces.networkIP)')
+              export CASSANDRA_IP
+              echo "${CASSANDRA_IP}"
               """
              echo CASSANDRA_IP
 
