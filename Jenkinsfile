@@ -1,4 +1,4 @@
-def CASSANDRA_IP
+def CASSANDRA_IP=[]
 def CASSANDRA_NETWORK
 pipeline {
     agent any 
@@ -47,12 +47,14 @@ pipeline {
                 gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a --command "sudo sed -i 's/SimpleSnitch/${params.SNITCH}/gI' /etc/cassandra/cassandra.yaml"
                 """
                 }
+                echo CASSANDRA_NETWORK
             }
             }
         }  
         stage('Inicio de Servicio & Validación') {
             steps {
                  script {
+                echo CASSANDRA_NETWORK
                 for (loopIndex=0; loopIndex < Integer.parseInt("${params.NODOS}");loopIndex++){
                 sh """ 
                 gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a --command "sudo service cassandra start"
