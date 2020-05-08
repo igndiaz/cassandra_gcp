@@ -18,6 +18,7 @@ pipeline {
                 }
           for (loopIndex=0; loopIndex < 3;loopIndex++) {
           sh "CASSANDRA_IP_${loopIndex}=\$(gcloud compute instances describe cassandra-dev-${loopIndex} --zone=us-central1-a --format='value(networkInterfaces.networkIP)')"
+          sh "export CASSANDRA_IP_${loopIndex}"
                }
                        }   
             } 
