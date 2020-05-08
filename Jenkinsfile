@@ -1,5 +1,4 @@
 def CASSANDRA_IP = []
-def CASSANDRA_NETWORK
 pipeline {
     agent any 
     parameters {
