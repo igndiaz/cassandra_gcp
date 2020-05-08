@@ -43,7 +43,7 @@ pipeline {
                 script {
                 for (loopIndex=0; loopIndex < 3;loopIndex++){
                 sh """ 
-                gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a --command 'sudo sed -i 's/Test Cluster/${params.CLUSTER_NAME}/gI' /etc/cassandra/cassandra.yaml'
+                gcloud compute ssh cassandra-dev-${loopIndex} --zone=us-central1-a --command "sudo sed -i 's/Test Cluster/${params.CLUSTER_NAME}/gI' /etc/cassandra/cassandra.yaml"
                 """
                 }
             }
